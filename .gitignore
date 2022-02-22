@@ -1,3 +1,10 @@
+# macOs
+.DS_Store
+
+# tests
+tests
+tmp
+
 # -*- mode: gitignore; -*-
 *~
 \#*\#
