@@ -9,6 +9,13 @@ void show(int *pa) {
 int main(void) {
   int a = 5;
 
-  /* Pass reference to variable */
+  /* Pass memory address of
+     variable to function */
   show(&a);
+
+  /* Memory address and dereference */
+  /*     can cancel each other. */
+  printf("Cancelation result: %i\n", *&a);
+
+  return 0;
 }
