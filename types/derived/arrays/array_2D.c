@@ -47,7 +47,6 @@ int main(void){
 
   /* The same could be done by shortcut */
   int second_array_first_value = array[1][0];
-
  
   show_array(array);
 
