@@ -21,6 +21,7 @@ int main(void) {
 
   /* Dereferencing pointer gives value of first element. */
   int first_array_element = *int_array;
+  int *first_array_pointer = int_array;
 
   /* So elements can be accessed on two ways. */
 
@@ -31,14 +32,19 @@ int main(void) {
      Adding two 32bits integer will mean
      pointing to address at 1008 (third element).  */
   int second_array_element = *(int_array + 1);
+  int *second_array_pointer = int_array+1;
 
   /* Or using syntax. Above mechanism shortcut. */
   int third_array_element = int_array[2];
+  int *third_element_pointer = int_array+2;
 
   printf("Array: [%d, %d, %d]\n", int_array[0], int_array[1], int_array[2]);
-  printf(" First element: %d\n", first_array_element);
-  printf("Second element: %d\n", second_array_element);
-  printf(" Third element: %d\n", third_array_element);
+  printf("                First element: %d\n", first_array_element);
+  printf("   First element address: %p\n\n", first_array_pointer);
+  printf("            Second element: %d\n", second_array_element);
+  printf("Second element pointer: %p\n\n",second_array_pointer);
+  printf("               Third element: %d\n", third_array_element);
+  printf("   Third element pointer: %p\n\n", third_element_pointer);
 
   return 0;
 }
