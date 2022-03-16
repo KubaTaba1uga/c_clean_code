@@ -1,4 +1,5 @@
 #include <stdio.h>
+/* `atoi` dependency */
 #include <stdlib.h>
  
 int main(void)

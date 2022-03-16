@@ -9,6 +9,12 @@ void show_max(char *type_name, unsigned long long int max) {
 }
 
 int main(void) {
+  signed char x = 127;
+  show_max("signed char", SCHAR_MAX);
+
+  unsigned char y = 255;
+  show_max("unsigned char", UCHAR_MAX);
+
   short int a = 32767;
   show_max("short int", SHRT_MAX);
 
