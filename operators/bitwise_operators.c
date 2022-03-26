@@ -30,5 +30,35 @@ int main(void) {
   uint8_t p = ~b;
   show_hex("~b", p);
 
+  /* Shift left=`<<` moves all lvalue bits to left
+     by number of places on rvalue. */
+  /* Example: */
+  /* b = 1 1 1 1 1 1 1 1 */
+  /* 2 = 0 0 0 0 0 0 1 0 */
+  /* b << 2 = 1 1 1 1 1 1 0 0 */
+  /* 1111 = f | 1100 = c */
+  uint8_t r = b << 2;
+  show_hex("b<<2", r);
+
+  /* Shift right=`>>` moves all lvalue bits to right
+     by number of places on rvalue. */
+  /* Example: */
+  /* b = 1 1 1 1 1 1 1 1 */
+  /* 2 = 0 0 0 0 0 0 1 0 */
+  /* b >> 2 = 0 0 1 1 1 1 1 1 */
+  /* 0011 = 3 | 1111 = f */
+  uint8_t s = b >> 2;
+  show_hex("b>>2", s);
+
+  /* In case of shifting `signed` values additional */
+  /*	validation has to be made.  */
+  int8_t c = 0xFF, t;
+  if (c < 0)
+    printf("Shifting can't be performed on negative value c=%i", c);
+  else {
+    t = c << 1;
+    show_hex("t<<1", t);
+  }
+
   return 0;
 }
