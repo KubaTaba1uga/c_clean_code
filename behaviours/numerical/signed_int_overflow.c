@@ -1,3 +1,4 @@
+/* Signed int overflow is undefined behaviour. */
 #include <limits.h>
 #include <stdio.h>
 
