@@ -103,7 +103,8 @@ void *linked_list_pop(l_list *l, int i) {
   /* Find node with  index `i`, return its value and  */
   /*	remove it from list. */
   /* Node memory with index 'i'  will be realesed. */
-  /* If  `i` is bigger than linked list length, assign `ERANGE` to errno.*/
+  /* If  `i` is bigger than linked list length, assign */
+  /*	`ERANGE` to errno and return `NULL`. */
   /* Be carefull when popping list first element, because */
   /*	list could be lost if You won't do it carefully enough. */
   l_list *n_i = l;
@@ -134,7 +135,8 @@ l_list *linked_list_remove(l_list *l, int i) {
   /* Node and node's value memory will be realesed. */
   /* If operation succeed return pointer to new node */
   /*	with index `i`. */
-  /* If  `i` is bigger than linked list length, assign `ERANGE` to errno.*/
+  /* If  `i` is bigger than linked list length, assign */
+  /*	`ERANGE` to errno and return `NULL`. */
   /* Be carefull when removing list first element, because */
   /*	list could be lost if You won't do it carefully enough. */
   l_list *n_i = l->next;
