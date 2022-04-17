@@ -32,7 +32,7 @@ int main(void) {
 
   /* test adding to list */
 
-  // test insert
+  /* //  test insert */
   /* for (int i = 0; i < LIST_SIZE; ++i) { */
   /*   if (!(i % 100)) */
   /*     show_progress(i); */
@@ -54,9 +54,8 @@ int main(void) {
   }
   puts("");
 
-  l_list *l_cp = l;
-
   /* /\* show list content *\/ */
+  /* l_list *l_cp = l; */
   /* while (l_cp->next) { */
   /*   numbers *n = l_cp->value; */
   /*   printf("a=%i | b=%i\n", n->a, n->b); */
@@ -68,13 +67,13 @@ int main(void) {
   //  test clear
   linked_list_clear(l);
 
-  // test remove
+  /* // test remove */
   /* l_list *l_cp_2 = l; */
   /* while (l_cp_2) { */
   /*   l_cp_2 = linked_list_remove(l_cp_2, 0); */
   /* } */
 
-  // test pop
+  /* // test pop */
   /* l_list *placeholder = NULL; */
   /* while (l_cp_2) { */
   /*   placeholder = l_cp_2->next; */
