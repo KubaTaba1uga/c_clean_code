@@ -11,6 +11,10 @@ typedef struct {
 
 int take_dependencies_ammount(int n);
 
-int take_dependency(int n, task *tasks[n]);
+dependency *take_dependency(int n, task *tasks[n]);
+
+void realese_dependencies(int d, dependency *dependencies[d]);
+
+void show_dependency(dependency *dependency);
 
 #endif

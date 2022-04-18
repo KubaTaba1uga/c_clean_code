@@ -8,39 +8,79 @@
 #include "utils.h"
 
 int main(void) {
+  int exit_status = EXIT_FAILURE;
+
   // take `n`
-  int tasks_ammount = take_tasks_ammount();
-  task *tasks[tasks_ammount];
-  for (int i = 0; i < tasks_ammount; ++i) {
-    tasks[i] = NULL;
+  int n = take_tasks_ammount();
+  task *tasks[n], *result[n];
+  for (int i = 0; i < n; ++i) {
+    tasks[i] = result[i] = NULL;
   }
 
   // take `n` size array
-  for (int i = 0; i < tasks_ammount; i++) {
+  for (int i = 0; i < n;) {
     int t = take_task_priority();
     if (check_pairwise_distinct(i, t, tasks)) {
-      task *new_task = create_new_task(t, i + 1);
-      if (!new_task) {
-        realese_tasks(tasks_ammount, tasks);
-        exit(EXIT_FAILURE);
-      }
-      tasks[i] = new_task;
-    } else {
-      i--;
+      task *tmp = create_new_task(t, i + 1);
+      if (!tmp)
+        goto REALESE_TASKS;
+      tasks[i] = tmp;
+      i++;
     }
   }
 
   // take `d`
-  int dependencies_ammount = take_dependencies_ammount(tasks_ammount);
-  dependency *dependencies[dependencies_ammount];
-  for (int i = 0; i < dependencies_ammount; ++i) {
-    dependencies[i] = NULL;
+  int d = take_dependencies_ammount(n);
+  dependency **dependencies = (dependency **)malloc(sizeof(dependency *) * d);
+  if (!dependencies) {
+    goto REALESE_DEPENDENCIES_ARRAY;
   }
 
   stdin_buffer_cleanup();
 
   // take `d` size array
-  for (int i = 0; i < dependencies_ammount; ++i) {
-    take_dependency(tasks_ammount, tasks);
+  for (int i = 0; i < d; ++i) {
+    dependency *tmp = take_dependency(n, tasks);
+    if (!d) {
+      goto REALESE_DEPENDENCIES;
+    }
+    dependencies[i] = tmp;
   }
+
+  /* for (int i = 0; i < d; ++i) { */
+  /*   show_dependency(dependencies[i]); */
+  /* } */
+
+  /* show_tasks(n, tasks); */
+
+  // khan alghoritm
+  for (int i = 0; i < n; ++i) {
+    task *t = find_smallest_task_with_zero_dependencies(n, tasks);
+    if (!t) {
+      print_error("Cycle dependencies are not allowed");
+      goto REALESE_DEPENDENCIES;
+    }
+
+    t->dependency_ammount--;
+    for (int j = 0; j < d; ++j) {
+      if (dependencies[j]->depend_on->task_number == t->task_number)
+        dependencies[j]->task->dependency_ammount--;
+    }
+
+    result[i] = t;
+  }
+
+  for (int i = 0; i < n; ++i) {
+    printf("%i\n", result[i]->task_number);
+  }
+
+  exit_status = EXIT_SUCCESS;
+
+REALESE_DEPENDENCIES:
+  realese_dependencies(d, dependencies);
+REALESE_DEPENDENCIES_ARRAY:
+  free(dependencies);
+REALESE_TASKS:
+  realese_tasks(n, tasks);
+  exit(exit_status);
 }

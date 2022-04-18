@@ -25,48 +25,77 @@ int take_dependencies_ammount(int n) {
   return take_input_warning(max_value, min_value, question, n_format);
 }
 
-void take_dependency_input(int result[2], int n, int n_max, int n_min,
-                           const char *question, const char *n_format) {
-  const char *error_type_msg =
-      "Value has to contain to integers separated with one space";
+char *find_number(char *line, int line_len, int *results) {
 
-  const char *error_range_msg =
-      "Both values has to be bigger than %i and smaller than %i";
-  char error_range[strlen(error_range_msg) + (n_min % 10) + (n_max % 10) + 1];
-  sprintf(error_range, error_range_msg, n_min, n_max);
-
-  int numbers_len = ((n % 10) + 1) * 2 + 1;
-  char numbers[numbers_len];
-  numbers[numbers_len - 1] = '\0';
-
-  int a, b;
-  while (true) {
-    take_input(&numbers, n_format, question);
-    a = atoi(numbers);
-    b = atoi(numbers);
-    printf("%i\n", a);
-    printf("%i\n", b);
-    if (!a || !b)
-      puts(error_type_msg);
-    else if (a < n_min || a > n_max || b < n_min || b > n_max)
-      puts(error_range_msg);
-    else {
-      result[0] = a;
-      result[1] = b;
+  *results = atoi(line);
+  while (*line++ != ' ')
+    if (*line == '\0')
       break;
-    }
+
+  return line;
+}
+
+void check_numbers(int a[2], int n_min, int n_max) {
+  const char *format_error = "Wrong input format";
+  const char *range_error_msg =
+      "Both values has to be bigger than %i and smaller than %i";
+
+  char range_error[strlen(range_error_msg) + (n_min % 10) + (n_max % 10)];
+  sprintf(range_error, range_error_msg, n_min, n_max);
+
+  if (!a[0] || !a[1]) {
+    print_error(format_error);
+    return;
+  }
+  // if numbers don't met aqusition reset their's values
+  if (a[0] < n_min || a[0] > n_max || a[1] < n_min || a[1] > n_max) {
+    print_error(range_error);
+    a[0] = 0;
+    a[1] = 0;
   }
 }
 
-int take_dependency(int n, task *tasks[n]) {
+void take_dependency_input(int results[2], int n_min, int n_max,
+                           const char *question, const char *n_format) {
+
+  int line_len = 32;
+  char *line = (char *)malloc(sizeof(char) * line_len), *line_cp;
+
+  while (!results[0] || !results[1]) {
+    take_input(line, n_format, question);
+    line_cp = line;
+    for (int i = 0; i < 2; ++i) {
+      line_cp = find_number(line_cp, line_len, &results[i]);
+    }
+    check_numbers(results, n_min, n_max);
+  }
+  free(line);
+}
+
+dependency *take_dependency(int n, task *tasks[n]) {
   const int max_value = n;
   const int min_value = 1;
   const char *question = "dependency";
   const char *n_format = "%[^\n]%*c";
 
-  int numbers[2];
+  int numbers[2] = {0, 0};
 
-  take_dependency_input(numbers, n, max_value, min_value, question, n_format);
+  take_dependency_input(numbers, min_value, max_value, question, n_format);
 
-  return 0;
+  task *task_ = tasks[numbers[1] - 1];
+  task *depend_on = tasks[numbers[0] - 1];
+  task_->dependency_ammount++;
+
+  return create_new_dependency(task_, depend_on);
+}
+
+void realese_dependencies(int d, dependency *dependencies[d]) {
+  while (d-- > 0)
+    if (dependencies[d])
+      free(dependencies[d]);
+}
+
+void show_dependency(dependency *dependency) {
+  printf("Task %i ", dependency->task->task_number);
+  printf("Depends on %i\n", dependency->depend_on->task_number);
 }

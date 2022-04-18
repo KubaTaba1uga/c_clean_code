@@ -41,13 +41,55 @@ int take_task_priority(void) {
   return take_input_warning(max_value, min_value, question, n_format);
 }
 
-bool check_pairwise_distinct(int i, int t, task *tasks[]) {
+bool check_pairwise_distinct(int n, int t, task *tasks[n]) {
   /* If there is a task with priority == t, return false.*/
-  while (i-- > 0) {
-    if (t == tasks[i]->priority) {
+  while (n-- > 0) {
+    if (t == tasks[n]->priority) {
       print_error("There already is task with that priority");
       return false;
     }
   }
   return true;
+}
+
+task *find_smallest_task_with_zero_dependencies(int n, task *tasks[n]) {
+  int i = 0;
+  task *t = NULL;
+  task **result = (task **)malloc(sizeof(task *) * i), **tmp;
+  if (!result)
+    goto RETURN_T;
+
+  // find tasks with 0 dependencies
+  while (n-- > 0) {
+    if (tasks[n]->dependency_ammount == 0) {
+      tmp = (task **)realloc(result, sizeof(task *) * ++i);
+      if (!tmp)
+        goto REALESE_RESULT;
+      result = tmp;
+      result[i - 1] = tasks[n];
+    }
+  }
+
+  if (!i)
+    goto REALESE_RESULT;
+
+  // find task with smallest priority
+  t = result[i - 1];
+
+  while (i-- > 0)
+    if (result[i]->priority < t->priority)
+      t = result[i];
+
+REALESE_RESULT:
+  free(result);
+RETURN_T:
+  return t;
+}
+
+void show_tasks(int n, task *tasks[n]) {
+  while (n-- > 0) {
+    printf("%i ", tasks[n]->task_number);
+    printf("d = %i\n", tasks[n]->dependency_ammount);
+  }
+  puts("");
 }
