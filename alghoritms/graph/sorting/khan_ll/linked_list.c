@@ -1,8 +1,3 @@
-#include <errno.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "linked_list.h"
 
 l_list *linked_list_create_node(void *value) {
@@ -75,7 +70,7 @@ l_list *linked_list_insert(l_list *l, void *value, int i) {
   /*	`ERANGE` to errno and return `NULL`. */
   /* If not enough memory to allocate new node,  */
   /*	return `NULL`.*/
-  l_list *n_i = linked_list_create_node(value), *placeholder = NULL;
+  l_list *n_i = linked_list_create_node(value), *tmp = NULL;
   if (!n_i)
     return NULL;
 
@@ -91,9 +86,9 @@ l_list *linked_list_insert(l_list *l, void *value, int i) {
   }
 
   // attach node
-  placeholder = l->next;
+  tmp = l->next;
   l->next = n_i;
-  l = placeholder;
+  l = tmp;
 
 INSERT:
   n_i->next = l;
@@ -172,7 +167,7 @@ l_list *linked_list_find(l_list *l, void *value,
   /* Comparision function should take pointers to `void*`, */
   /*  type and make casting explicitly inside a `cmp_function`. */
 
-  while (l->next) {
+  while (l) {
     // if node's value match what is looked for return it
     if (cmp_function(l->value, value))
       return l;

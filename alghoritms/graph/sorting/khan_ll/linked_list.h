@@ -1,7 +1,10 @@
-#include <stdbool.h>
-
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
+
+#include <errno.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // Linked list
 typedef struct _l_list {

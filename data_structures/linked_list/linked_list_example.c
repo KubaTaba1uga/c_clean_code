@@ -32,18 +32,7 @@ int main(void) {
 
   /* test adding to list */
 
-  /* //  test insert */
-  /* for (int i = 0; i < LIST_SIZE; ++i) { */
-  /*   if (!(i % 100)) */
-  /*     show_progress(i); */
-
-  /*   // create random numbers */
-  /*   numbers *n = create_random_numbers(RANGE_MIN, RANGE_MAX); */
-  /*   l = linked_list_insert(l, n, 0); */
-  /* } */
-  /* puts(""); */
-
-  // test append
+  //  test insert
   for (int i = 0; i < LIST_SIZE; ++i) {
     if (!(i % 100))
       show_progress(i);
@@ -54,7 +43,40 @@ int main(void) {
   }
   puts("");
 
-  /* /\* show list content *\/ */
+  /* // test append */
+  /* for (int i = 0; i < LIST_SIZE; ++i) { */
+  /*   if (!(i % 100)) */
+  /*     show_progress(i); */
+
+  /*   // create random numbers */
+  /*   numbers *n = create_random_numbers(RANGE_MIN, RANGE_MAX); */
+  /*   l = linked_list_insert(l, n, 0); */
+  /* } */
+  /* puts(""); */
+
+  /* test searching */
+  l_list *l_cp = l;
+
+  int looking_for = 69;
+
+  // test find
+  /* for (int i = 0; l_cp; ++i) { */
+  /*   l_cp = linked_list_find(l_cp, &looking_for, &is_a); */
+  /*   if (l_cp) { */
+  /*     l_cp = l_cp->next; */
+  /*   } else */
+  /*     printf("Number of %i occurences in list: %i \n", looking_for, i); */
+  /* } */
+
+  // test index of
+  int j = linked_list_index_of(l_cp, &looking_for, &is_a);
+  numbers *n = linked_list_get_value(l_cp, j);
+  if (j >= 0)
+    printf("Index: %i\na=%i | b=%i\n", j, n->a, n->b);
+  else
+    printf("Value %i not found\n", looking_for);
+
+  /* show list content */
   /* l_list *l_cp = l; */
   /* while (l_cp->next) { */
   /*   numbers *n = l_cp->value; */

@@ -75,7 +75,6 @@ task *find_smallest_task_with_zero_dependencies(int n, task *tasks[n]) {
 
   // find task with smallest priority
   t = result[i - 1];
-
   while (i-- > 0)
     if (result[i]->priority < t->priority)
       t = result[i];
@@ -92,4 +91,21 @@ void show_tasks(int n, task *tasks[n]) {
     printf("d = %i\n", tasks[n]->dependency_ammount);
   }
   puts("");
+}
+
+task **remove_task_from_array(int *n, task **tasks, int i) {
+  /* Remove task with index `i` from array `tasks` and  */
+  /*   decrement array length. */
+
+  for (; i < *n - 1; ++i) {
+    tasks[i] = tasks[i + 1];
+  }
+
+  *n = *n - 1;
+  tasks = (task **)realloc(tasks, sizeof(task *) * *n);
+  if (!tasks) {
+    print_error("Not enough memory to reallocate tasks");
+  }
+
+  return tasks;
 }
