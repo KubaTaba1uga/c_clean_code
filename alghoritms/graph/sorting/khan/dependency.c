@@ -1,18 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "dependency.h"
-#include "task.h"
-#include "utils.h"
 
 dependency *create_new_dependency(task *task_, task *depend_on) {
   dependency *d = (dependency *)malloc(sizeof(dependency));
   if (d) {
     d->task = task_;
     d->depend_on = depend_on;
-  } else
-    print_error("Not enough memory to allocate dependency");
+  }
   return d;
 }
 
@@ -66,7 +59,7 @@ void take_dependency_input(int results[2], int n_min, int n_max,
   while (!results[0] || !results[1]) {
     take_input(line, n_format, question);
     line_cp = line;
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 1; i >= 0; --i) {
       line_cp = find_number(line_cp, &results[i]);
     }
     check_numbers(results, n_min, n_max);
@@ -74,7 +67,7 @@ void take_dependency_input(int results[2], int n_min, int n_max,
   free(line);
 }
 
-dependency *take_dependency(int n, task *tasks[n]) {
+dependency *take_dependency(int n, l_list *tasks) {
   const int max_value = n;
   const int min_value = 1;
   const char *question = "dependency";
@@ -84,20 +77,34 @@ dependency *take_dependency(int n, task *tasks[n]) {
 
   take_dependency_input(numbers, min_value, max_value, question, n_format);
 
-  task *task_ = tasks[numbers[1] - 1];
-  task *depend_on = tasks[numbers[0] - 1];
-  task_->dependency_ammount++;
+  task *task_ = linked_list_get_value(tasks, n - numbers[0]);
+  task *depend_on = linked_list_get_value(tasks, n - numbers[1]);
 
   return create_new_dependency(task_, depend_on);
 }
 
-void realese_dependencies(int d, dependency *dependencies[d]) {
-  while (d-- > 0)
-    if (dependencies[d])
-      free(dependencies[d]);
+void show_dependency(dependency *dependency) {
+  printf("Task %i | ", dependency->task->task_number);
+  printf("Depends on %i\n", dependency->depend_on->task_number);
 }
 
-void show_dependency(dependency *dependency) {
-  printf("Task %i ", dependency->task->task_number);
-  printf("Depends on %i\n", dependency->depend_on->task_number);
+bool is_depend_on_eq(void *d, void *t) {
+  // Does dependency `d` depend on task `t`
+  dependency *d_p = (dependency *)d;
+  task *t_p = (task *)t;
+
+  return d_p->task->task_number == t_p->task_number;
+}
+
+int count_dependencies(l_list *deps, task *t) {
+  int i = 0;
+  while (deps) {
+    deps = linked_list_find(deps, t, is_depend_on_eq);
+    if (deps) {
+      i++;
+      deps = deps->next;
+    } else
+      break;
+  }
+  return i;
 }

@@ -1,5 +1,5 @@
 #!/bin/bash 
 
-python3 ~/Github/python_gui/automate_khan_input.py &
+python3 ./automate_khan_input.py &
 
 valgrind -s --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./solution.out 

@@ -1,26 +1,14 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "task.h"
-#include "utils.h"
 
 task *create_new_task(int priority, int task_number) {
   task *t = (task *)malloc(sizeof(task));
   if (t) {
     t->priority = priority;
     t->task_number = task_number;
-    t->dependency_ammount = 0;
-  } else {
-    puts("Not enough memory to allocate task");
+    // Initialize incoming edges counter
+    t->deps = 0;
   }
   return t;
-}
-
-void realese_tasks(int n, task *tasks[n]) {
-  while (n-- > 0)
-    if (tasks[n])
-      free(tasks[n]);
 }
 
 int take_tasks_ammount(void) {
@@ -41,71 +29,64 @@ int take_task_priority(void) {
   return take_input_warning(max_value, min_value, question, n_format);
 }
 
-bool check_pairwise_distinct(int n, int t, task *tasks[n]) {
-  /* If there is a task with priority == t, return false.*/
-  while (n-- > 0) {
-    if (t == tasks[n]->priority) {
-      print_error("There already is task with that priority");
-      return false;
+void show_task(task *t) {
+  printf("Task number: %i | ", t->task_number);
+  printf("Priority: %i | ", t->priority);
+  printf("Dependencies: %i \n", t->deps);
+}
+
+bool is_priority_eq(void *t, void *p) {
+  // Is task `t` priority equal to `p`
+  task *t_p = (task *)t;
+  int *p_p = (int *)p;
+
+  return t_p->priority == *p_p;
+}
+
+bool cmp_priorities(void *a, void *b) {
+  task *a_p = (task *)a;
+  task *b_p = (task *)b;
+  return a_p->priority > b_p->priority;
+}
+
+int find_tasks_without_dependencies(l_list **tasks, l_list **result) {
+  l_list *tmp_t = *tasks;
+
+  int task_i = 0;
+  while (tmp_t) {
+    task *tmp = tmp_t->value;
+
+    tmp_t = tmp_t->next;
+
+    if (tmp->deps == 0) {
+
+      // delete node from tasks list
+      linked_list_pop(*tasks, task_i);
+
+      // overwrite head if previously
+      // popped 0th element
+      if (task_i == 0)
+        *tasks = tmp_t;
+
+      *result = linked_list_insert(*result, tmp, 0);
+      if (*result == NULL) {
+        print_error("Not enough memory to allocate zero dependencies list");
+        return 0;
+      }
+
+      task_i--;
     }
+
+    task_i++;
   }
-  return true;
+
+  return 1;
 }
 
-task *find_smallest_task_with_zero_dependencies(int n, task *tasks[n]) {
-  int i = 0;
-  task *t = NULL;
-  task **result = (task **)malloc(sizeof(task *) * i), **tmp;
-  if (!result)
-    goto RETURN_T;
-
-  // find tasks with 0 dependencies
-  while (n-- > 0) {
-    if (tasks[n]->dependency_ammount == 0) {
-      tmp = (task **)realloc(result, sizeof(task *) * ++i);
-      if (!tmp)
-        goto REALESE_RESULT;
-      result = tmp;
-      result[i - 1] = tasks[n];
-    }
+void show_tasks(l_list *tasks, char *list_name) {
+  puts(list_name);
+  while (tasks) {
+    show_task(tasks->value);
+    tasks = tasks->next;
   }
-
-  if (!i)
-    goto REALESE_RESULT;
-
-  // find task with smallest priority
-  t = result[i - 1];
-  while (i-- > 0)
-    if (result[i]->priority < t->priority)
-      t = result[i];
-
-REALESE_RESULT:
-  free(result);
-RETURN_T:
-  return t;
-}
-
-void show_tasks(int n, task *tasks[n]) {
-  while (n-- > 0) {
-    printf("%i ", tasks[n]->task_number);
-    printf("d = %i\n", tasks[n]->dependency_ammount);
-  }
-  puts("");
-}
-
-task **remove_task_from_array(int *n, task **tasks, int i) {
-  /* Remove task with index `i` from array `tasks` and  */
-  /*   decrement array length. */
-
-  for (; i < *n - 1; ++i) {
-    tasks[i] = tasks[i + 1];
-  }
-
-  *n = *n - 1;
-  tasks = (task **)realloc(tasks, sizeof(task *) * *n);
-  if (!tasks) {
-    print_error("Not enough memory to reallocate tasks");
-  }
-
-  return tasks;
 }

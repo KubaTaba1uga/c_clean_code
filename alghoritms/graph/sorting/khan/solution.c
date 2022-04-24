@@ -4,93 +4,134 @@
 #include <string.h>
 
 #include "dependency.h"
+#include "linked_list.h"
 #include "task.h"
 #include "utils.h"
 
 int main(void) {
-  int exit_status = EXIT_FAILURE;
+  l_list *tmp_t, *tmp_d, *tasks = NULL, *deps = NULL, *zero_deps_tasks = NULL;
+  int n, d, v_nodes, exit_status = EXIT_FAILURE;
 
   // take `n`
-  int n = take_tasks_ammount();
-  task *result[n], **tmp;
-  task **tasks = (task **)malloc(sizeof(task *) * n);
-  for (int i = 0; i < n; ++i) {
-    tasks[i] = result[i] = NULL;
-  }
+  n = take_tasks_ammount();
+  task *sorted[n];
 
   // take `n` size array
   for (int i = 0; i < n;) {
-    int t = take_task_priority();
-    if (check_pairwise_distinct(i, t, tasks)) {
-      task *tmp = create_new_task(t, i + 1);
-      if (!tmp)
-        exit(exit_status);
-      // goto REALESE_TASKS;
-      tasks[i] = tmp;
+    int p = take_task_priority();
+    // check priority uniqueness
+    if (!linked_list_find(tasks, &p, is_priority_eq)) {
+      task *tmp = create_new_task(p, i + 1);
+      tasks = linked_list_insert(tasks, tmp, 0);
+      if (!tmp || !tasks) {
+        puts("Not enough memory to allocate tasks");
+        exit_status = EXIT_FAILURE;
+        goto REALESE_TASKS;
+      }
       i++;
+    } else
+      printf("There already is task with priority: %i \n", p);
+  }
+
+  // take `d`
+  d = take_dependencies_ammount(n);
+
+  stdin_buffer_cleanup();
+
+  // take `d` size array
+  for (int i = 0; i < d; ++i) {
+    dependency *tmp = take_dependency(n, tasks);
+    deps = linked_list_insert(deps, tmp, 0);
+    if (!tmp || !deps) {
+      print_error("Not enough memory to allocate dependencies");
+      goto REALESE_DEPENDENCIES;
     }
   }
 
-  show_tasks(n, tasks);
+  // khan alghoritm
+  /* Step-1 */
+  // Compute number of incoming edges for
+  //	each node
+  tmp_t = tasks;
+  while (tmp_t) {
+    task *tmp = tmp_t->value;
+    tmp->deps = count_dependencies(deps, tmp_t->value);
+    tmp_t = tmp_t->next;
+  }
 
-  tasks = remove_task_from_array(&n, tasks, 2);
+  // Initialize the count of visited nodes as 0
+  v_nodes = 0;
 
-  show_tasks(n, tasks);
-  /* // take `d` */
-  /* int d = take_dependencies_ammount(n); */
-  /* dependency **dependencies = (dependency **)malloc(sizeof(dependency *) *
-   * d); */
-  /* if (!dependencies) { */
-  /*   goto REALESE_DEPENDENCIES_ARRAY; */
-  /* } */
+  /* Step-2 */
+  // Pick all nodes without incoming edges
+  //	and add it to a list.
+  if (!find_tasks_without_dependencies(&tasks, &zero_deps_tasks)) {
+    exit_status = EXIT_FAILURE;
+    goto REALESE_ZERO_DEPENDENCIES;
+  }
 
-  /* stdin_buffer_cleanup(); */
+  while (zero_deps_tasks) {
+    /* This is not part of khan's algorithm */
+    /* however it is necessery to acomplish */
+    /* exercise */
+    // Move task with smallest priority to
+    //  beginning of the tasks without
+    //  dependencies list
+    linked_list_sort(zero_deps_tasks, cmp_priorities);
 
-  /* // take `d` size array */
-  /* for (int i = 0; i < d; ++i) { */
-  /*   dependency *tmp = take_dependency(n, tasks); */
-  /*   if (!d) { */
-  /*     goto REALESE_DEPENDENCIES; */
-  /*   } */
-  /*   dependencies[i] = tmp; */
-  /* } */
+    /* Step-3 */
+    // Remove 0'th node from list of nodes
+    // without dependencies and add it to
+    // sorted sequence
 
-  /* /\* for (int i = 0; i < d; ++i) { *\/ */
-  /* /\*   show_dependency(dependencies[i]); *\/ */
-  /* /\* } *\/ */
+    // Add node without dependencies and
+    // least preority to sorted sequence
+    sorted[v_nodes] = zero_deps_tasks->value;
 
-  /* /\* show_tasks(n, tasks); *\/ */
+    // Increment count of visited nodes
+    v_nodes++;
 
-  /* // khan alghoritm */
-  /* for (int i = 0; i < n; ++i) { */
-  /*   // TODO: remove t from tasks */
-  /*   task *t = find_smallest_task_with_zero_dependencies(n, tasks); */
-  /*   if (!t) { */
-  /*     print_error("Cycle dependencies are not allowed"); */
-  /*     goto REALESE_DEPENDENCIES; */
-  /*   } */
+    // Decrease dependencies counter
+    // for all tasks that depends on
+    // deleted task
+    tmp_d = deps;
+    while (tmp_d) {
+      dependency *tmp = tmp_d->value;
+      if (tmp->depend_on == zero_deps_tasks->value)
+        tmp->task->deps--;
+      tmp_d = tmp_d->next;
+    }
 
-  /*   // TODO: remove all occurences from dependencies */
-  /*   t->dependency_ammount--; */
-  /*   for (int j = 0; j < d; ++j) { */
-  /*     if (dependencies[j]->depend_on->task_number == t->task_number) */
-  /*       dependencies[j]->task->dependency_ammount--; */
-  /*   } */
+    // Remove node with least priority
+    tmp_t = zero_deps_tasks->next;
+    linked_list_pop(zero_deps_tasks, 0);
+    zero_deps_tasks = tmp_t;
 
-  /*   result[i] = t; */
-  /* } */
+    if (!find_tasks_without_dependencies(&tasks, &zero_deps_tasks)) {
+      exit_status = EXIT_FAILURE;
+      goto REALESE_ZERO_DEPENDENCIES;
+    }
+  }
 
-  /* for (int i = 0; i < n; ++i) { */
-  /*   printf("%i\n", result[i]->task_number); */
-  /* } */
+  if (v_nodes != n) {
+    print_error("Topological sort is not possible for the given graph");
+    exit_status = EXIT_FAILURE;
+    goto REALESE_ZERO_DEPENDENCIES;
+  } else {
+    printf("\nSorted:\n    ");
+    for (int i = 0; i < n; ++i) {
+      printf("%i ", sorted[i]->task_number);
+      free(sorted[i]);
+    }
+    puts("");
+    exit_status = EXIT_SUCCESS;
+  }
 
-  /*   exit_status = EXIT_SUCCESS; */
-
-  /* REALESE_DEPENDENCIES: */
-  /*   realese_dependencies(d, dependencies); */
-  /* REALESE_DEPENDENCIES_ARRAY: */
-  /*   free(dependencies); */
-  /* REALESE_TASKS: */
-  /*   realese_tasks(n, tasks); */
-  /*   exit(exit_status); */
+REALESE_ZERO_DEPENDENCIES:
+  linked_list_clear(zero_deps_tasks);
+REALESE_DEPENDENCIES:
+  linked_list_clear(deps);
+REALESE_TASKS:
+  linked_list_clear(tasks);
+  exit(exit_status);
 }
