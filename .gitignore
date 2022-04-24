@@ -16,6 +16,7 @@ tmp
 auto-save-list
 tramp
 .\#*
+*#*
 
 # Org-mode
 .org-id-locations
@@ -108,3 +109,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Formatting standards
+.clang-format
