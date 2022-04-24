@@ -85,7 +85,7 @@ dependency *take_dependency(int n, l_list *tasks) {
 
 void show_dependency(dependency *dependency) {
   printf("Task %i | ", dependency->task->task_number);
-  printf("Depends on %i |", dependency->depend_on->task_number);
+  printf("Depends on %i\n", dependency->depend_on->task_number);
 }
 
 bool is_depend_on_eq(void *d, void *t) {
@@ -106,6 +106,5 @@ int count_dependencies(l_list *deps, task *t) {
     } else
       break;
   }
-
   return i;
 }

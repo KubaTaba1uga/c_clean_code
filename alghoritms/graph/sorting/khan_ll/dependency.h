@@ -14,6 +14,8 @@ typedef struct {
   task *depend_on;
 } dependency;
 
+dependency *create_new_dependency(task *task_, task *depend_on);
+
 int take_dependencies_ammount(int n);
 
 dependency *take_dependency(int n, l_list *tasks);

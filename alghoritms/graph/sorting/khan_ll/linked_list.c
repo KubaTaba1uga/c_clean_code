@@ -91,6 +91,7 @@ l_list *linked_list_insert(l_list *l, void *value, int i) {
   l = tmp;
 
 INSERT:
+  puts("insert");
   n_i->next = l;
   return n_i;
 }
@@ -121,7 +122,9 @@ void *linked_list_pop(l_list *l, int i) {
   l->next = l->next->next;
 
 FREE_NODE:
+  // printf("POP I: %i\n", i);
   n_i_value = n_i->value;
+
   free(n_i);
   return n_i_value;
 };
@@ -200,4 +203,37 @@ void linked_list_clear(l_list *l) {
   /* Realese memory for all nodes and values of linked list. */
   while (l)
     l = linked_list_remove(l, 0);
+}
+
+void linked_list_swap(l_list *a, l_list *b) {
+  /* Swap value of node `a` with value of node `b`. */
+  void **tmp = a->value;
+  a->value = b->value;
+  b->value = tmp;
+}
+
+l_list *linked_list_sort(l_list *l, bool cmp_function(void *, void *)) {
+  /* Bubble sort implementation */
+
+  l_list *current = NULL;
+  l_list *cmp_to = NULL;
+  int swap_counter;
+
+  do {
+    current = l;
+    cmp_to = l->next;
+    swap_counter = 0;
+
+    while (cmp_to) {
+      if (cmp_function(current->value, cmp_to->value)) {
+        linked_list_swap(current, cmp_to);
+        swap_counter++;
+      }
+      cmp_to = cmp_to->next;
+      current = current->next;
+    }
+
+  } while (swap_counter > 0);
+
+  return l;
 }

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "linked_list.h"
 #include "utils.h"
 
 typedef struct {
@@ -24,5 +25,11 @@ task *find_smallest_task_with_zero_dependencies(int i, task *tasks[i]);
 void show_task(task *t);
 
 bool is_priority_eq(void *t, void *p);
+
+bool cmp_priorities(void *a, void *b);
+
+l_list *fill_no_deps_list(l_list **tasks, l_list **no_deps);
+
+void show_tasks(l_list *tasks, char *list_name);
 
 #endif

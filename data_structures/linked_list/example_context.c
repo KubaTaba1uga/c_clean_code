@@ -33,3 +33,11 @@ bool is_a(void *n, void *a) {
 
   return n_i->a == *a_i;
 }
+
+bool cmp_a(void *n, void *m) {
+  // Check if: n.a >= m.a
+  numbers *n_i = (numbers *)n;
+  numbers *m_i = (numbers *)m;
+
+  return n_i->a >= m_i->a;
+}

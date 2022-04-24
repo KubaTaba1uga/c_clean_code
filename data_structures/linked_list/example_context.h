@@ -16,4 +16,6 @@ numbers *create_random_numbers(int min, int max);
 
 bool is_a(void *n, void *a);
 
+bool cmp_a(void *n, void *m);
+
 #endif
