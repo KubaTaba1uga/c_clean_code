@@ -45,24 +45,6 @@ void *linked_list_get_value(l_list *l, int i) {
   return l->value;
 }
 
-l_list *linked_list_append(l_list *l, void *value) {
-  /* Append value as last element of linked list. */
-  /* If appending succeed return pointer to last */
-  /*	node. */
-  /* If not enough memory to allocate new node */
-  /*	 return `NULL`. */
-
-  // skip all nodes until last one
-  while (l->next)
-    l = l->next;
-
-  // create new node
-  l->next = linked_list_create_node(value);
-
-  // return pointer to new node or `NULL`
-  return l->next;
-};
-
 l_list *linked_list_insert(l_list *l, void *value, int i) {
   /* Insert value as node with index `i` and return */
   /*	pointer to this node. */
@@ -91,7 +73,6 @@ l_list *linked_list_insert(l_list *l, void *value, int i) {
   l = tmp;
 
 INSERT:
-  puts("insert");
   n_i->next = l;
   return n_i;
 }
@@ -122,9 +103,7 @@ void *linked_list_pop(l_list *l, int i) {
   l->next = l->next->next;
 
 FREE_NODE:
-  // printf("POP I: %i\n", i);
   n_i_value = n_i->value;
-
   free(n_i);
   return n_i_value;
 };
@@ -179,24 +158,6 @@ l_list *linked_list_find(l_list *l, void *value,
 
   // return `NULL` if nothing was found
   return NULL;
-}
-
-int linked_list_index_of(l_list *l, void *value,
-                         bool cmp_function(void *, void *)) {
-  /* Find node witch contain `value` and return it's index.  */
-  /* If `value` wasn't found in any node return -1. */
-  /* Comparision function should take pointers to `void*`, */
-  /*  type and make casting explicitly inside a `cmp_function`. */
-
-  for (int i = 0; l; ++i) {
-    // if node's value match what is looked for return it
-    if (cmp_function(l->value, value))
-      return i;
-    l = l->next;
-  }
-
-  // return -1 if nothing was found
-  return -1;
 }
 
 void linked_list_clear(l_list *l) {

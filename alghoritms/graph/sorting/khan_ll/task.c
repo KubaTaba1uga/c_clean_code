@@ -49,7 +49,7 @@ bool cmp_priorities(void *a, void *b) {
   return a_p->priority > b_p->priority;
 }
 
-l_list *fill_no_deps_list(l_list **tasks, l_list **no_deps) {
+int find_tasks_without_dependencies(l_list **tasks, l_list **result) {
   l_list *tmp_t = *tasks;
 
   int task_i = 0;
@@ -60,21 +60,18 @@ l_list *fill_no_deps_list(l_list **tasks, l_list **no_deps) {
 
     if (tmp->deps == 0) {
 
-      show_task(tmp);
-      printf("Task i: %i\n", task_i);
-      // delete node from list
-      puts("inside fill before pop");
+      // delete node from tasks list
       linked_list_pop(*tasks, task_i);
-      puts("inside fill after pop");
 
-      // overwrite head if popped 0th element
+      // overwrite head if previously
+      // popped 0th element
       if (task_i == 0)
         *tasks = tmp_t;
 
-      *no_deps = linked_list_insert(*no_deps, tmp, 0);
-      if (*no_deps == NULL) {
+      *result = linked_list_insert(*result, tmp, 0);
+      if (*result == NULL) {
         print_error("Not enough memory to allocate zero dependencies list");
-        return NULL;
+        return 0;
       }
 
       task_i--;
@@ -82,7 +79,8 @@ l_list *fill_no_deps_list(l_list **tasks, l_list **no_deps) {
 
     task_i++;
   }
-  return *tasks;
+
+  return 1;
 }
 
 void show_tasks(l_list *tasks, char *list_name) {

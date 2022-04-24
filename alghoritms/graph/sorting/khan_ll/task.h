@@ -20,15 +20,13 @@ int take_tasks_ammount(void);
 
 int take_task_priority(void);
 
-task *find_smallest_task_with_zero_dependencies(int i, task *tasks[i]);
-
 void show_task(task *t);
 
 bool is_priority_eq(void *t, void *p);
 
 bool cmp_priorities(void *a, void *b);
 
-l_list *fill_no_deps_list(l_list **tasks, l_list **no_deps);
+int find_tasks_without_dependencies(l_list **tasks, l_list **result);
 
 void show_tasks(l_list *tasks, char *list_name);
 
