@@ -14,6 +14,8 @@
 #include <locale.h>
 #include <wchar.h>
 
+#define BUFFER_SIZE = 24
+
 void show_wchar(wchar_t *a, char *repr) {
   wprintf(L"\n\nhexadecimal value of %s: ", repr);
   wchar_t *a_cp = a;
@@ -26,10 +28,11 @@ void show_wchar(wchar_t *a, char *repr) {
 }
 
 int main(void) {
-  setlocale(LC_ALL, "");
+  // specify encoding related to used characters
+  setlocale(LC_ALL, "pl_PL.UTF-8");
 
   // `L` before '' means this is wide character
-  wchar_t word[] = {L'ź', L'd', L'ź', L'b', L'ł', L'o'};
+  wchar_t word[] = {L'ź', L'd', L'ź', L'b', L'ł', L'o', L'\0'};
   show_wchar(word, "word");
 
   // `L` before "" means this is wide string
@@ -37,7 +40,7 @@ int main(void) {
   show_wchar(a, "a");
 
   wchar_t *b = L"d";
-  show_wchar(b, "bł");
+  show_wchar(b, "b");
 
   wchar_t *c = L"ź";
   show_wchar(c, "c");
