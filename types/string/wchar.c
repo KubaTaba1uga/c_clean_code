@@ -14,8 +14,6 @@
 #include <locale.h>
 #include <wchar.h>
 
-#define BUFFER_SIZE = 24
-
 void show_wchar(wchar_t *a, char *repr) {
   wprintf(L"\n\nhexadecimal value of %s: ", repr);
   wchar_t *a_cp = a;
@@ -53,4 +51,6 @@ int main(void) {
 
   wchar_t *f = L"o";
   show_wchar(f, "f");
+
+  return 0;
 }
