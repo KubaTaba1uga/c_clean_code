@@ -1,41 +1,45 @@
+#include <locale.h>
+#include <stdio.h>
 #include <uchar.h>
 
- 
-void show_wchar(wchar_t *a, char *repr) {
-  wprintf(L"\n\nhexadecimal value of %s: ", repr);
-  wchar_t *a_cp = a;
-  while (*a_cp != 0) {
-    wprintf(L"%x ", *a_cp++);
-  }
+void show_char16(char16_t *a, char *repr) {
+  char16_t *a_cp = a;
 
-  // `%ls` means this is wide string
-  wprintf(L"\nrepresentation value of %s: %ls\n", repr, a);
+  printf("hexadecimal values of %s: ", repr);
+  while (*a_cp != 0)
+    printf("%x ", *a_cp++);
+
+  printf("\nrepresentation value of %s: ", repr);
+  while (*a != 0)
+    // %C means print multibyte char
+    printf("%C", *a++);
+
+  puts("\n");
 }
 
 int main(void) {
   setlocale(LC_ALL, "");
 
-  // `L` before '' means this is wide character
-  wchar_t word[] = {L'ź', L'd', L'ź', L'b', L'ł', L'o'};
-  show_wchar(word, "word");
+  // `u` before '' means this is two bytes char
+  char16_t word[] = {u'ź', u'd', u'ź', u'b', u'ł', u'o', u'\0'};
+  show_char16(word, "word");
 
-  // `L` before "" means this is wide string
-  wchar_t *a = L"ź";
-  show_wchar(a, "a");
+  // `u` before "" means this is string of two bytes chars
+  char16_t *a = u"ź";
+  show_char16(a, "a");
 
-  wchar_t *b = L"d";
-  show_wchar(b, "bł");
+  char16_t *b = u"d";
+  show_char16(b, "d");
 
-  wchar_t *c = L"ź";
-  show_wchar(c, "c");
+  char16_t *c = u"ź";
+  show_char16(c, "c");
 
-  wchar_t *d = L"b";
-  show_wchar(d, "d");
+  char16_t *d = u"b";
+  show_char16(d, "d");
 
-  wchar_t *e = L"ł";
-  show_wchar(e, "e");
+  char16_t *e = u"ł";
+  show_char16(e, "e");
 
-  wchar_t *f = L"o";
-  show_wchar(f, "f");
+  char16_t *f = u"o";
+  show_char16(f, "f");
 }
-
