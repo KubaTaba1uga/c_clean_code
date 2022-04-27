@@ -20,11 +20,11 @@ void show_char16(char16_t *a, char *repr) {
 int main(void) {
   setlocale(LC_ALL, "");
 
-  // `u` before '' means this is two bytes char
+  // `u` before '' means this is two bytes character
   char16_t word[] = {u'ź', u'd', u'ź', u'b', u'ł', u'o', u'\0'};
   show_char16(word, "word");
 
-  // `u` before "" means this is string of two bytes chars
+  // `u` before "" means this is string of two bytes characters
   char16_t *a = u"ź";
   show_char16(a, "a");
 
