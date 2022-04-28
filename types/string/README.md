@@ -1,3 +1,16 @@
+# String literals
+*Bytes
+- usefull when allocating storage
+*Code units
+- Number of individual code units used to represent 
+the string. This length depends on encoding and can 
+also be used to allocate memory.
+*Code points
+- Code points (characters) can take up multiple code units.
+This value is not usefull when allocating memory.
+
+# Character set
+
 GCC has several flags that allow You to configure character sets.
 
 `-fexec-characterset=<characterset>`
