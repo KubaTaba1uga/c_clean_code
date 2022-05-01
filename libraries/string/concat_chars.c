@@ -5,7 +5,7 @@
 int main(void) {
   char a = 'a';
   char b = 'b';
-  char string[4];
+  char string[sizeof(a)+sizeof(b)];
 
   sprintf(string, "%c %c", a, b);
 

@@ -10,7 +10,7 @@
 
 int main(void) {
   setlocale(LC_ALL, "");
-  char16_t *input = u"źdźbło";
+  char16_t input[] = u"źdźbło";
 
   size_t input_size = sizeof(input);
 
