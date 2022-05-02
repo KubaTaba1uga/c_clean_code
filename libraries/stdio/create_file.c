@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "utils.h"
 
@@ -27,4 +28,6 @@ int main(void) {
     printf("File creation failed: %s\n", strerror(errno));
   else
     printf("Created file: %s\n", path);
+
+  close(fd);
 }

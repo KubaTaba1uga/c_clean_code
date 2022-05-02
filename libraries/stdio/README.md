@@ -54,3 +54,11 @@ Multibyte character sequences or narrow characters that can be represented
 
 You can reset the orientation of a stream by using the fwide function or by
 	closing and then reopening the file.
+
+# File descriptor vs File stream pointer
+
+File descriptor is id assigned to the file during opening and realesed during closing.
+Because amount of possible file descriptors is limited it is important to close opened files. Also because opening the files means allocating resources to it.
+
+File stream pointer is representation of communication with the file.
+File stream pointer is using File descriptor for recognizing open file inside file system.
