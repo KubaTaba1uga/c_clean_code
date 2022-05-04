@@ -29,9 +29,16 @@ int main(void) {
   word[word_size - 2] = '\n';
   word[word_size - 1] = '\0';
 
-  int count = fwrite(word, sizeof(char), word_size, my_file);
+  unsigned int count = fwrite(word, sizeof(char), word_size, my_file);
   if (count != word_size)
     perror("File writing failed");
   else
     printf("File path: %s\n", path);
+
+  if (fclose(my_file) == EOF) {
+    fputs("Failed to close file\n", stderr);
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
 }

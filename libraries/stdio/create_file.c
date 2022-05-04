@@ -24,10 +24,17 @@ int main(void) {
 
   // read and write permissions for owner, groups and all others users
   int fd = creat(path, 0666);
-  if (fd == -1)
+  if (fd == -1) {
     printf("File creation failed: %s\n", strerror(errno));
-  else
+    return EXIT_FAILURE;
+  } else
     printf("Created file: %s\n", path);
 
-  close(fd);
+  if (close(fd) == -1) {
+    printf("File closing failed: %s\n", strerror(errno));
+    return EXIT_FAILURE;
+  } else
+    printf("Closed file: %s\n", path);
+
+  return EXIT_FAILURE;
 }

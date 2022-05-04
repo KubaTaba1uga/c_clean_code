@@ -31,7 +31,10 @@ int main(void) {
   } else if (feof(readme))
     puts("\n\nEnd of file reached successfully");
 
-  fclose(readme);
+  if (fclose(readme) == EOF) {
+    fputs("`fclose` failed: ", stderr);
+    return 126;
+  }
 
   return 0;
 }
