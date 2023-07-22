@@ -12,7 +12,7 @@ int main() {
   char worst_food[worst_food_size];
   char *worst_food_p = worst_food;
   printf("Enter your most hated food:");
-  /* sizeof can be used because of array variable. */
+  /* sizeof can't be used because of pointer variable. */
   fgets(worst_food, worst_food_size, stdin);
 
   printf("Best: %sWorst: %s", best_food, worst_food);
