@@ -38,5 +38,14 @@ int main(void) {
   size_t d_size = sizeof(&d);
   printf("Pointer to `d` size is %lu bytes\n", d_size);
 
+  /* C is smart enough to recognize size of array variables. */
+  int e[] = {1, 2, 3};
+  size_t e_size = sizeof(e);
+  printf("`e` array size is %lu bytes\n", e_size);
+  /* but not size of pointer to array variable. */
+  int *p_e = e;
+  size_t p_e_size = sizeof(p_e);
+  printf("Pointer to `e` array size is %lu bytes\n", p_e_size);
+
   return 0;
 }
