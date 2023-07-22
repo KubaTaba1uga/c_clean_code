@@ -23,5 +23,20 @@ int main(void) {
   /* This not. */
   // size_t a_size = sizeof a;
 
+  /* Pointers are fixed in size. On 32-bit system */
+  /*   memory address is stored as a 32-bit number. */
+  /*   In 64-bit system memory address is stored as */
+  /*   64-bit number.  */
+  int b = 1;
+  char c = '1';
+  long int d = 1L;
+
+  size_t b_size = sizeof(&b);
+  printf("Pointer to `b` size is %lu bytes\n", b_size);
+  size_t c_size = sizeof(&c);
+  printf("Pointer to `c` size is %lu bytes\n", c_size);
+  size_t d_size = sizeof(&d);
+  printf("Pointer to `d` size is %lu bytes\n", d_size);
+
   return 0;
 }

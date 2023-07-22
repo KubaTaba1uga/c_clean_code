@@ -27,7 +27,7 @@ int calc_card_value(char *card) {
 int main(void) {
   /* Imagine a blackjack game. Let's assign  */
   /*   cards strings to it's values. */
-  char card[] = "LK";
+  char card[] = "A";
   int card_value = calc_card_value(card);
 
   printf("Card: %s\nValue: %i\n", card, card_value);
