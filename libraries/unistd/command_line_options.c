@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
                       "ae:")) != EOF) {
     switch (ch) {
     case 'e':
-      // `optarg` stands for -e argument
+      // `optarg` stands for optional argument
       engine_count = optarg;
       break;
     case 'a':
