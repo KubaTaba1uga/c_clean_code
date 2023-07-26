@@ -2,32 +2,26 @@
 
 /* A union type contains sequentially
 allocated memory objects, but unlike
-array they can be different types and 
+array they can be different types and
 unlike structure data can overlap itself. */
 
 /* Union declaration */
-union {
-  struct {
-    int x;
-    int y;
-  } square;
-  struct {
-    int x;
-    int y;
-    int z;
-  } triangle;
- /* Union tag */
-} shape;
+/* allocates memory for the biggest type. */
+/* In ex. below it would be sizeof(long int).  */
+typedef union {
+  long int count;
+  float weight;
+  float volume;
+} quantity;
 
-int main(void){
+int main(void) {
 
-  shape.square.x = 5;
+  quantity computers = {.count = 1};
+  quantity apples = {.weight = 155.3};
+  quantity juice = {.volume = 6.4};
 
-  shape.triangle.y = 3;
-
-  int area = shape.square.x*shape.square.y;
-
-  printf("Square area: %i\n", area);
+  /* Only last written fields should be read from. */
+  printf("%li %f %f\n", computers.count, apples.weight, juice.volume);
 
   return 0;
 }
