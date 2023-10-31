@@ -1,7 +1,4 @@
 
-
-What about having a global structure variable prefilled with function pointers?
-
 ## lib.h
 ```
 #pragma once
