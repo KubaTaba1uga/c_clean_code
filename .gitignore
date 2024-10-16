@@ -112,3 +112,7 @@ dkms.conf
 
 # Formatting standards
 .clang-format
+
+# Exclude files without extension
+*.
+!*/  # Exclude directories

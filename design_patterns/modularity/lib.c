@@ -13,6 +13,7 @@ struct PrivateLibOps {
 static void lib_do_foo(int x);
 static void lib_do_something(void);
 static const char *lib_do_bar(void *p);
+
 static struct PrivateLibOps private_lib_ops = {.do_something =
                                                    lib_do_something};
 
@@ -28,9 +29,13 @@ struct LibOps *get_lib_ops(void) { return &lib_ops; }
 /* ###################################################################### */
 /* #                            Public API                              # */
 /* ###################################################################### */
-static void lib_do_foo(int x) { printf("Doing foo %d\n", x); }
+static void lib_do_foo(int x) {
+  private_lib_ops.do_something();
+  printf("Doing foo %d\n", x);
+}
 
 static const char *lib_do_bar(void *p) {
+  private_lib_ops.do_something();
   printf("Doing bar: %p\n", p);
   return "Hello";
 }
